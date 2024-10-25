@@ -5,11 +5,8 @@ import java.util.Scanner;
 public class ManejadorArchivos {
     private String linea;
     private String directorio;
-    private ContadorPalabras contadorPalabras;
+    private final ContadorPalabras contadorPalabras;
     private boolean archivoLeido;
-
-    private BufferedReader lector;
-    private PrintWriter escritor;
 
     public ManejadorArchivos() {
         linea = null;
@@ -25,14 +22,14 @@ public class ManejadorArchivos {
         }
 
         try {
-            lector = new BufferedReader(new FileReader("archivosEntrada/%s.csv".formatted(directorio)));
+            BufferedReader lector = new BufferedReader(new FileReader("archivosEntrada/%s.csv".formatted(directorio)));
 
             while ((linea = lector.readLine()) != null) {
                 String[] contenido = linea.split("[\\s,]+");
                 for (String s : contenido) {
                     if (contadorPalabras.estaPalabra(s.toLowerCase())) {
                         contadorPalabras.aumentarContadorDe(s.toLowerCase());
-                    } else if (tieneSoloLetras(s)) {
+                    } else if (contadorPalabras.tieneSoloLetras(s)) {
                         contadorPalabras.agregarPalabraNueva(s.toLowerCase());
                     }
                 }
@@ -82,6 +79,8 @@ public class ManejadorArchivos {
         Scanner entrada = new Scanner(System.in);
         System.out.print("Ingrese el nombre del archivo que desea seleccionar: ");
         directorio = entrada.nextLine();
+        contadorPalabras.limpiarHashMap();
+        archivoLeido = false;
     }
 
     public void mostrarRepeticionPalabra() {
@@ -97,22 +96,16 @@ public class ManejadorArchivos {
 
         Scanner entrada = new Scanner(System.in);
         String palabra;
-        boolean palabraEncontrada = false;
 
         System.out.print("Ingresa la palabra que quieras ver: ");
         palabra = entrada.nextLine().toLowerCase();
-
-        for (Map.Entry<String, Integer> entry : contadorPalabras.getContadorPalabras().entrySet()) {
-            if (palabra.equals(entry.getKey())) {
-                System.out.printf("La palabra %s se repite %d veces.%n", entry.getKey(), entry.getValue());
-                palabraEncontrada = true;
-                break;
-            }
-        }
-
-        if (!palabraEncontrada) {
+        int repeticiones = contadorPalabras.obtenerContadorDe(palabra);
+        if (repeticiones > 0) {
+            System.out.printf("La palabra %s se repite %d veces.%n", palabra, repeticiones);
+        } else {
             System.out.println("Error: la palabra no ha sido encontrada.");
         }
+
     }
 
     public void mostrarArchivoSeleccionado() {
@@ -135,10 +128,6 @@ public class ManejadorArchivos {
         }
 
         System.out.println(this);
-    }
-
-    private boolean tieneSoloLetras(String s) {
-        return s.matches("^[a-zA-Z]+$");
     }
 
     @Override

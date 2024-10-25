@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 public class ContadorPalabras {
-    private HashMap<String, Integer> contadorPalabras;
+    private final HashMap<String, Integer> contadorPalabras;
 
     public ContadorPalabras() {
         contadorPalabras = new HashMap<>();
@@ -25,6 +25,14 @@ public class ContadorPalabras {
 
     public HashMap<String, Integer> getContadorPalabras() {
         return contadorPalabras;
+    }
+
+    public boolean tieneSoloLetras(String s) {
+        return s.matches("^[a-zA-Z]+$");
+    }
+
+    public void limpiarHashMap() {
+        contadorPalabras.clear();
     }
 
     @Override
