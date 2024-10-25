@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -16,17 +17,23 @@ public class Main {
             System.out.println("5. Ver todas las palabras");
             System.out.println("6. Salir");
             System.out.print("Opción: ");
-            switch (entrada.nextInt()) {
-                case 1 -> manejador.seleccionarArchivo();
-                case 2 -> manejador.leerArchivo();
-                case 3 -> manejador.guardarArchivo();
-                case 4 -> manejador.mostrarRepeticionPalabra();
-                case 5 -> manejador.mostrarTodasLasPalabras();
-                case 6 -> {
-                    System.out.println("Ha salido del programa, ¡hasta pronto!");
-                    programaTerminado = true;
+            try {
+                int opcion = entrada.nextInt();
+                switch (opcion) {
+                    case 1 -> manejador.seleccionarArchivo();
+                    case 2 -> manejador.leerArchivo();
+                    case 3 -> manejador.guardarArchivo();
+                    case 4 -> manejador.mostrarRepeticionPalabra();
+                    case 5 -> manejador.mostrarTodasLasPalabras();
+                    case 6 -> {
+                        System.out.println("Ha salido del programa, ¡hasta pronto!");
+                        programaTerminado = true;
+                    }
+                    default -> System.out.println("Error: opción no valida");
                 }
-                default -> System.out.println("Error: opción no valida");
+            } catch (InputMismatchException e) {
+                System.out.println("Error: introduzca solo números.");
+                entrada.nextLine();
             }
         }
     }
